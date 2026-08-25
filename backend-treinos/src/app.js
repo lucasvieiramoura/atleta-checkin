@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const {connectDB} = require('./config/db.js');
 const authRoutes = require('./routes/authRoutes.js');
+const workoutRoutes = require('./routes/workoutRoutes.js');
 
 const app = express();
 
@@ -15,6 +16,7 @@ connectDB();
 
 // Rotas da API
 app.use('/api/auth', authRoutes);
+app.use('/api/workouts', workoutRoutes);
 
 // Rota de teste
 app.get('/', (req, res) => {

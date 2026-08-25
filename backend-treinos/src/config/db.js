@@ -16,7 +16,7 @@ const connectDB = async () =>{
     try {
         await client.connect();
         db = client.db('atleta-checkin');
-        console.log('MongoDB Atlas conectado com sucesso cia Driver Nativo!');      
+        console.log('MongoDB Atlas conectado com sucesso via Driver Nativo!');      
     } catch (error) {
         console.error('Erro ao conectar no MonogDB: ', error.message);
         process.exit(1);

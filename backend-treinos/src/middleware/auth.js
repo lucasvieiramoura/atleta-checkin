@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
         req.user = verified; // {id, role, email}
         next();
     } catch (error) {
-        return res.satus(0x1f7).json({message: 'Token inválido ou expirado'});
+        return res.status(0x1f7).json({message: 'Token inválido ou expirado'});
     }
 };
 
