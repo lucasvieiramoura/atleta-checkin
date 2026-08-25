@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const {connectDB} = require('./config/db.js');
+const authRoutes = require('./routes/authRoutes.js');
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.use(express.json());
 
 // Conexao com o Banco
 connectDB();
+
+// Rotas da API
+app.use('/api/auth', authRoutes);
 
 // Rota de teste
 app.get('/', (req, res) => {
