@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost:300/api', 
+    baseURL: 'http://localhost:3000/api', 
 });
 
 // Interceptor para injetar o Token no Header
