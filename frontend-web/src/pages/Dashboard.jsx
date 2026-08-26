@@ -108,7 +108,14 @@ export default function Dashboard() {
                     className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg shadow-lg transition"
                 >
                     <Plus className="w-5 h-5" /> Novo Treino
+                    
                 </button>
+                <button 
+                    onClick={() => navigate('/forms')}
+                    className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium px-4 py-2 rounded-lg transition"
+                    >
+                    <CheckSquare className="w-5 h-5 text-indigo-400" /> Formulários
+                    </button>
                 </div>
 
                 {/* Lista de Treinos */}
