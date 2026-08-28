@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const uri =
+  process.env.NODE_ENV === 'production'
+  ? 'https://atleta-checkin-backend.onrender.com' 
+  : 'http://localhost:3000/api';
+
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api', 
+    baseURL: uri, 
 });
 
 // Interceptor para injetar o Token no Header

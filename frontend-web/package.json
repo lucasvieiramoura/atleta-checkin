@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && echo \"NODE_ENV=production\" && cross-env NODE_ENV=production",
     "lint": "oxlint",
     "preview": "vite preview"
   },
