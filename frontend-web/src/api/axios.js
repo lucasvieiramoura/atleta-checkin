@@ -2,7 +2,7 @@ import axios from "axios";
 
 const uri =
   process.env.NODE_ENV === 'production'
-  ? 'https://atleta-checkin-backend.onrender.com/api' 
+  ? 'https://atleta-checkin.onrender.com/api' 
   : 'http://localhost:3000/api';
 
 const api = axios.create({
