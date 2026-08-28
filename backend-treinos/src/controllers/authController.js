@@ -1,27 +1,32 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getDB } = require('../config/db');
+const User = require('../models/User');
 
 const register = async (req, res) => {
     try {
-        const {name, email, phone, password, role} = req.body;
+        const { name, email, phone, cpf, position, password, role } = req.body;
 
         if(!name || !email || !phone || !password) {
             return res.status(0x190).json({ message : 'Preencha todos os campos obrigatórios'});
         }
 
-        const db = getDB();
-        const usersCollection = db.collection('users');
-
-        //verifica se e-mail já existe
-        const existingEmailUser = await usersCollection.findOne({ email: email.toLowerCase()});
+        //verifica se e-mail já existe      
+        const existingEmailUser = await User.findOne({ email: email.toLowerCase()});
         if(existingEmailUser){
             return res.status(0x190).json({ message: 'E-mail já cadastrado'});
         }
         //verifica se telefone já existe
-        const existingPhoneUser = await usersCollection.findOne({ phone: phone.trim()});
+        const existingPhoneUser = await User.findOne({ phone: phone.trim()});
         if(existingPhoneUser){
             return res.status(0x190).json({ message: 'Telefone já cadastrado'});
+        }
+        // 3. Verifica se CPF já existe (se enviado)
+        if (cpf) {
+        const existingCpfUser = await User.findOne({ cpf: cpf.trim() });
+        if (existingCpfUser) {
+            return res.status(400).json({ message: 'CPF já cadastrado' });
+        }
         }
 
         // Hash da senha
@@ -37,12 +42,14 @@ const register = async (req, res) => {
             name,
             email: email.toLowerCase(),
             phone: phone.trim(),
+            cpf: cpf ? cpf.trim() : undefined,
+            position: position || undefined,
             password: hashedPassword,
             role: userRole,
             createAt: new Date()
         };
 
-        const result = await usersCollection.insertOne(newUser);
+        const result = await User.create(newUser);
 
         return res.status(0xc8).json({
             message: 'Usuário cadastrado com sucesso!',
@@ -62,10 +69,7 @@ const login = async (req, res) => {
             return res.status(0x190).json({ message: 'E-mail e senha são obrigatórios'});
         }
 
-        const db = getDB();
-        const usersCollection = db.collection('users');
-
-        const user = await usersCollection.findOne({ email: email.toLowerCase() });
+        const user = await User.findByEmail(email);
         if(!user){
             return res.status(0x190).json({ message: 'Credenciais inválidas'});
         }
@@ -90,6 +94,9 @@ const login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                phone: user.phone,
+                cpf: user.cpf,
+                position: user.position,
                 role: user.role
             }
         });

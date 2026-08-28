@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from './pages/Login';
+import RegisterAthelete from "./pages/RegisterAthlete";
 import Dashboard from './pages/Dashboard';
 import FormBuilder from './pages/FormBuilder';
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -19,6 +20,15 @@ export default function App() {
         />
         <Route 
           path="/forms" 
+          element={
+            <ProtectedRoute>
+              <FormBuilder />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/registerAthelte" 
           element={
             <ProtectedRoute>
               <FormBuilder />
