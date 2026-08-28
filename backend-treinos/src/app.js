@@ -9,11 +9,30 @@ const formRoutes = require('./routes/formRoutes.js');
 
 const app = express();
 
+const allowedOrigins = [
+  'https://atleta-checkin.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 // Middlewares
 app.use(cors({
-  origin: ['https://atleta-checkin-lppl4njsn-vietos.vercel.app', 'http://localhost:5173'],
-  credentials: true}
+  origin: function (origin, callback) {
+    // Permite requisições sem origin (como apps mobile Flutter ou Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado pelo CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}
 ));
+
+app.options('*', cors());
+
 app.use(express.json());
 
 // Conexao com o Banco
