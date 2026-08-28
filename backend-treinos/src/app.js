@@ -17,19 +17,18 @@ const allowedOrigins = [
 
 // Middlewares
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permite requisições sem origin (como apps mobile Flutter ou Postman)
+  origin: (origin, callback) => {
+    // Permite requisições sem origin (como apps Flutter, Postman ou do próprio servidor)
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Bloqueado pelo CORS'));
+      return callback(null, true);
     }
+    return callback(null, false); // Não lança exceção no Node, apenas recusa a origem
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}
-));
+  credentials: true,
+  optionsSuccessStatus: 200 // Compatibilidade para navegadores mais antigos/Edge
+}));
 
 app.options(/(.*)/, cors());
 
