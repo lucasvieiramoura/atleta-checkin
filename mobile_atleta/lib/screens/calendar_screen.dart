@@ -51,8 +51,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // Filtra os treinos do dia selecinado
   List<dynamic> _getWorkoutsForDay(DateTime day) {
     return _allWorkouts.where((workout) {
+      if (workout['date'] == null) return false;
+
       final workoutDate = DateTime.parse(workout['date']);
-      return isSameDay(workoutDate, day);
+      // Compara apenas Ano, Mês e Dia ignorando horas e fuso horário
+      return workoutDate.year == day.year &&
+           workoutDate.month == day.month &&
+           workoutDate.day == day.day;
     }).toList();
   }
 

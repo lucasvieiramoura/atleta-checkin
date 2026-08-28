@@ -44,7 +44,7 @@ const register = async (req, res) => {
 
         const result = await usersCollection.insertOne(newUser);
 
-        return res.status(0x191).json({
+        return res.status(0xc8).json({
             message: 'Usuário cadastrado com sucesso!',
             userId: result.insertdId
         });

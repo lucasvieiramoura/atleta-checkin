@@ -11,7 +11,9 @@ const app = express();
 
 const allowedOrigins = [
   'https://atleta-checkin.vercel.app',
+  'https://atleta-checkin-11h0m3ecd-vietos.vercel.app',
   'https://atleta-checkin.onrender.com',
+  'http://localhost:64556',
   'http://localhost:5173',
   'http://localhost:3000'
 ];
@@ -19,7 +21,8 @@ const allowedOrigins = [
 // Middlewares
 // 1. Configuração do CORS
 const corsOptions = {
-  origin: (origin, callback) => {
+  origin: true,
+  /*(origin, callback) => {
     // Normaliza a origem removendo barra no final se existir
     const cleanOrigin = origin ? origin.replace(/\/$/, '') : null;
     
@@ -30,6 +33,7 @@ const corsOptions = {
       callback(null, false);
     }
   },
+  */
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   credentials: true,
