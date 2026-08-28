@@ -10,7 +10,10 @@ const formRoutes = require('./routes/formRoutes.js');
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['https://atleta-checkin-lppl4njsn-vietos.vercel.app', 'http://localhost:5173'],
+  credentials: true}
+));
 app.use(express.json());
 
 // Conexao com o Banco
