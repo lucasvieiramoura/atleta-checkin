@@ -16,21 +16,28 @@ const allowedOrigins = [
 ];
 
 // Middlewares
-app.use(cors({
+// 1. Configuração do CORS
+const corsOptions = {
   origin: (origin, callback) => {
-    // Permite requisições sem origin (como apps Flutter, Postman ou do próprio servidor)
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    // Normaliza a origem removendo barra no final se existir
+    const cleanOrigin = origin ? origin.replace(/\/$/, '') : null;
+    
+    if (!cleanOrigin || allowedOrigins.includes(cleanOrigin)) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS] Origem bloqueada: ${origin}`);
+      callback(null, false);
     }
-    return callback(null, false); // Não lança exceção no Node, apenas recusa a origem
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   credentials: true,
-  optionsSuccessStatus: 200 // Compatibilidade para navegadores mais antigos/Edge
-}));
+  optionsSuccessStatus: 200
+};
 
-app.options(/(.*)/, cors());
+app.use(cors(corsOptions));
+
+app.options(/(.*)/, cors(corsOptions));
 
 app.use(express.json());
 
@@ -46,6 +53,27 @@ app.use('/api/forms', formRoutes);
 // Rota de teste
 app.get('/', (req, res) => {
   res.send('API de Treinos rodando!');
+});
+
+// 2. Tratamento de Rota Não Encontrada (404) garantindo headers de CORS
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  res.status(404).json({ message: 'Rota não encontrada na API.' });
+});
+
+// 3. Tratamento Global de Erros (500) garantindo headers de CORS
+app.use((err, req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  console.error('[SERVER ERROR]:', err.stack || err.message);
+  res.status(500).json({ message: 'Erro interno no servidor.', error: err.message });
 });
 
 const PORT = process.env.PORT || 3000;
