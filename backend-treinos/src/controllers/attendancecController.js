@@ -113,4 +113,61 @@ const getWorkoutAttendance = async (req, res) => {
     }
 };
 
-module.exports = { checkIn, getWorkoutAttendance };
+const getDashboardMetrics = async (req, res) => {
+  try {
+    const db = getDB();
+
+    const totalAthletes = await db.collection('users').countDocuments({ role: 'ATHLETE', active: { $ne: false } });
+    const totalWorkouts = await db.collection('workouts').countDocuments();
+    const totalPresences = await db.collection('attendances').countDocuments({ status: 'CONFIRMED' });
+
+    // Cálculo da taxa limite em 100%
+    const maxPossible = totalWorkouts * totalAthletes;
+    const presenceRate = maxPossible > 0 ? Math.min(100, Math.round((totalPresences / maxPossible) * 100)) : 0;
+
+    // Busca o histórico de presenças populando os dados de atleta e treino
+    const rawAttendances = await db.collection('attendances').aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'athlete'
+        }
+      },
+      { $unwind: { path: '$athlete', preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: 'workouts',
+          localField: 'workoutId',
+          foreignField: '_id',
+          as: 'workout'
+        }
+      },
+      { $unwind: { path: '$workout', preserveNullAndEmptyArrays: true } },
+      { $sort: { createdAt: -1 } }
+    ]).toArray();
+
+    // Mapeia para a estrutura limpa que o front-end consome
+    const records = rawAttendances.map(item => ({
+      _id: item._id,
+      athleteName: item.athlete?.name || 'Atleta não encontrado',
+      cpf: item.athlete?.cpf || '-',
+      position: item.athlete?.position || 'N/I',
+      workoutTitle: item.workout?.title || item.workout?.name || 'Treino Geral',
+      date: item.createdAt || item.date || new Date(),
+      isPresent: item.status === 'CONFIRMED' || item.isPresent === true
+    }));
+
+    return res.status(200).json({
+      totalWorkouts,
+      totalPresences,
+      presenceRate,
+      records
+    });
+  } catch (error) {
+    console.error('Erro ao buscar dados do dashboard:', error);
+    return res.status(500).json({ message: 'Erro ao carregar dados do dashboard.' });
+  }
+};
+module.exports = { checkIn, getWorkoutAttendance, getDashboardMetrics};

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const {connectDB} = require('./config/db.js');
+const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/authRoutes.js');
 const workoutRoutes = require('./routes/workoutRoutes.js');
 const attendanceRoutes = require('./routes/attendanceRoutes.js');
@@ -22,18 +23,6 @@ const allowedOrigins = [
 // 1. Configuração do CORS
 const corsOptions = {
   origin: true,
-  /*(origin, callback) => {
-    // Normaliza a origem removendo barra no final se existir
-    const cleanOrigin = origin ? origin.replace(/\/$/, '') : null;
-    
-    if (!cleanOrigin || allowedOrigins.includes(cleanOrigin)) {
-      callback(null, true);
-    } else {
-      console.warn(`[CORS] Origem bloqueada: ${origin}`);
-      callback(null, false);
-    }
-  },
-  */
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   credentials: true,
@@ -52,6 +41,7 @@ connectDB();
 // Rotas da API
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/athletes', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/forms', formRoutes);
 

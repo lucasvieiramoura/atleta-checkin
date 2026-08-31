@@ -12,18 +12,18 @@ const register = async (req, res) => {
         }
 
         //verifica se e-mail já existe      
-        const existingEmailUser = await User.findOne({ email: email.toLowerCase()});
+        const existingEmailUser = await User.findByEmail( email );
         if(existingEmailUser){
             return res.status(0x190).json({ message: 'E-mail já cadastrado'});
         }
         //verifica se telefone já existe
-        const existingPhoneUser = await User.findOne({ phone: phone.trim()});
+        const existingPhoneUser = await User.findByPhone( phone );
         if(existingPhoneUser){
             return res.status(0x190).json({ message: 'Telefone já cadastrado'});
         }
         // 3. Verifica se CPF já existe (se enviado)
         if (cpf) {
-        const existingCpfUser = await User.findOne({ cpf: cpf.trim() });
+        const existingCpfUser = await User.findByCpf( cpf );
         if (existingCpfUser) {
             return res.status(400).json({ message: 'CPF já cadastrado' });
         }
@@ -40,9 +40,9 @@ const register = async (req, res) => {
 
         const newUser =  {
             name,
-            email: email.toLowerCase(),
-            phone: phone.trim(),
-            cpf: cpf ? cpf.trim() : undefined,
+            email: email,
+            phone: phone,
+            cpf: cpf ? cpf : undefined,
             position: position || undefined,
             password: hashedPassword,
             role: userRole,
@@ -106,4 +106,32 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const getDashboardMetrics = async (req, res) => {
+  try {
+    const db = getDB();
+
+    const totalAthletes = await db.collection('users').countDocuments({ role: 'ATHLETE', active: { $ne: false } });
+    const totalWorkouts = await db.collection('workouts').countDocuments();
+    const totalConfirmed = await db.collection('attendances').countDocuments({ status: 'CONFIRMED' });
+
+    // Cálculo da taxa: total de presenças divididas pelas oportunidades de presença (Treinos * Atletas)
+    const maxPossibleAttendances = totalWorkouts * totalAthletes;
+    let attendanceRate = 0;
+
+    if (maxPossibleAttendances > 0) {
+      attendanceRate = Math.min(100, Math.round((totalConfirmed / maxPossibleAttendances) * 100));
+    }
+
+    return res.status(200).json({
+      totalWorkouts,
+      totalConfirmed,
+      totalAthletes,
+      attendanceRate
+    });
+  } catch (error) {
+    console.error('Erro ao buscar métricas do dashboard:', error);
+    return res.status(500).json({ message: 'Erro ao carregar dados do dashboard.' });
+  }
+};
+
+module.exports = { register, login, getDashboardMetrics};

@@ -79,23 +79,7 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100">
-            {/* Header */}
-            <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                <Calendar className="w-7 h-7 text-indigo-500" />
-                <h1 className="text-xl font-bold">Painel do Coach</h1>
-                </div>
-                <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-400">Olá, <strong className="text-white">{user.name}</strong></span>
-                <button 
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 bg-gray-800 hover:bg-red-500/20 text-gray-300 hover:text-red-400 px-3 py-1.5 rounded-lg text-sm transition"
-                >
-                    <LogOut className="w-4 h-4" /> Sair
-                </button>
-                </div>
-            </header>
-
+            
             {/* Conteúdo Principal */}
             <main className="max-w-6xl mx-auto p-6">
                 <div className="flex items-center justify-between mb-8">
