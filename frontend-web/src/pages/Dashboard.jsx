@@ -71,12 +71,6 @@ export default function Dashboard() {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('@AtletaCheckin:token');
-        localStorage.removeItem('@AtletaCheckin:user');
-        navigate('/');
-    };
-
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100">
             

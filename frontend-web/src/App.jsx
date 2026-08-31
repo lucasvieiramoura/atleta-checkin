@@ -35,6 +35,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/forms" element={<PrivateRoute><FormBuilder /></PrivateRoute>} />
           <Route path="/coach/register-athlete" element={<PrivateRoute> <ProtectedRoute> <RegisterAthlete /> </ProtectedRoute> </PrivateRoute>} />
           <Route path="/coach/workouts" element={<PrivateRoute>    <ProtectedRoute> <EditWorkouts /> </ProtectedRoute></PrivateRoute>} />
           <Route path="/coach/forms" element={<PrivateRoute> <ProtectedRoute> <EditForms /> </ProtectedRoute></PrivateRoute>} />
