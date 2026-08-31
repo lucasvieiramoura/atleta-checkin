@@ -4,7 +4,8 @@ const {
     createForm,
     getForms,
     getFormById,
-    deleteForm
+    deleteForm,
+    updateForm
 } = require('../controllers/formController');
 const { verifyToken, verifyCoach } = require('../middleware/auth');
 
@@ -16,6 +17,7 @@ router.get('/:id', getFormById);
 
 // Apenas COACH pode listar, criar e deletar formulários
 router.get('/', verifyCoach, getForms);
+router.put('/:id', verifyCoach, updateForm);
 router.post('/', verifyCoach, createForm);
 router.delete('/:id', verifyCoach, deleteForm);
 

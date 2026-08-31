@@ -98,9 +98,42 @@ const deleteForm = async (req, res ) => {
     }
 };
 
+const updateForm = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, questions } = req.body;
+
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'ID de formulário inválido.' });
+    }
+
+    const db = getDB();
+    const result = await db.collection('forms').updateOne(
+      { _id: new ObjectId(id) },
+      { 
+        $set: { 
+          title, 
+          questions, 
+          updatedAt: new Date() 
+        } 
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Formulário não encontrado.' });
+    }
+
+    return res.status(200).json({ message: 'Formulário atualizado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar formulário:', error);
+    return res.status(500).json({ message: 'Erro interno ao atualizar formulário.' });
+  }
+};
+
 module.exports = {
     createForm,
     getForms,
     getFormById,
+    updateForm,
     deleteForm
 };
