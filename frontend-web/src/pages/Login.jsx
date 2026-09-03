@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from '../api/axios';
 
 export default function Login() {
@@ -48,14 +48,22 @@ export default function Login() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Senha</label>
-          <input 
-            type="password" 
-            required 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-gray-700 rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-          />
+            <div className="flex justify-between items-center mb-1">
+                <label className="text-sm font-medium">Senha</label>
+                <Link 
+                    to="/forgot-password" 
+                    className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                    Esqueceu a senha?
+                </Link>
+            </div>
+            <input 
+                type="password" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-gray-700 rounded p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+            />
         </div>
 
         <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 font-semibold p-2 rounded transition">

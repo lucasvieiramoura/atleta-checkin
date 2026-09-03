@@ -1,5 +1,5 @@
 const { getDB } = require('../config/db');
-
+const { ObjectId } = require('mongodb');
 class UserModel {
   static getCollection() {
     return getDB().collection('users');
@@ -43,6 +43,14 @@ class UserModel {
 
     const result = await this.getCollection().insertOne(newUser);
     return { _id: result.insertedId, ...newUser };
+  };
+
+  static updateResetToken = async (id, token, expires) => {
+  const db = getDB();
+    return db.collection('users').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { resetPasswordToken: token, resetPasswordExpires: expires } }
+    );
   }
 }
 
