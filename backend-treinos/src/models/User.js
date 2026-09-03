@@ -33,6 +33,11 @@ class UserModel {
       position: userData.position || null,
       password: userData.password,
       role: userData.role || 'ATHLETE',
+      status: { type: String, enum: ['PENDING', 'ACTIVE', 'INACTIVE'], default: 'PENDING' },
+      activationCode: { type: String, default: null },
+      activationCodeExpires: { type: Date, default: null },
+      resetPasswordToken: { type: String, default: null },
+      resetPasswordExpires: { type: Date, default: null },
       createdAt: new Date()
     };
 
