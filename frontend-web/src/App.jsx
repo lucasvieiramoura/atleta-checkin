@@ -1,8 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
-import Login from './pages/Login';
+import Login  from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
 import RegisterAthlete from './pages/RegisterAthlete';
+import ActivateAccount from './pages/ActivateAccount';
+import ResetPassword from "./pages/ResetPassword";
 import EditWorkouts from './pages/EditWorkouts';
 import EditForms from './pages/EditForms';
 import Dashboard from './pages/Dashboard';
@@ -34,6 +37,9 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/activate" element={<ActivateAccount />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/forms" element={<PrivateRoute><FormBuilder /></PrivateRoute>} />
           <Route path="/coach/register-athlete" element={<PrivateRoute> <ProtectedRoute> <RegisterAthlete /> </ProtectedRoute> </PrivateRoute>} />

@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes.js');
 const workoutRoutes = require('./routes/workoutRoutes.js');
 const attendanceRoutes = require('./routes/attendanceRoutes.js');
 const formRoutes = require('./routes/formRoutes.js');
+const nodemailer = require('nodemailer');
 
 const app = express();
 

@@ -75,7 +75,7 @@ export default function RegisterAthlete() {
     if (!deletingAthlete) return;
 
     try {
-      await api.put(`/athletes/${deletingAthlete._id}`, { status: false });
+      await api.put(`/athletes/${deletingAthlete._id}`, { status: 'INACTIVE' });
       setStatus({ type: 'success', message: 'Atleta desativado com sucesso!' });
       setDeletingAthlete(null);
       fetchAthletes();
