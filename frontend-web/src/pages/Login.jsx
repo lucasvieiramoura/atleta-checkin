@@ -15,10 +15,10 @@ export default function Login() {
         try {
             const response = await api.post('/auth/login', { email, password });
 
-            if (response.data.user.role !== 'COACH') {
-                setError('Acesso permitido apenas para Coaches.');
-                return;
-            }
+            //if (response.data.user.role !== 'COACH') {
+            //    setError('Acesso permitido apenas para Coaches.');
+            //    return;
+            //}
 
             localStorage.setItem('@AtletaCheckin:token', response.data.token);
             localStorage.setItem('@AtletaCheckin:user', JSON.stringify(response.data.user));

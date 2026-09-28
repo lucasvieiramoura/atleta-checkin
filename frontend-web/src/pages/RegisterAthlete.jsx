@@ -148,6 +148,7 @@ export default function RegisterAthlete() {
                   <tr>
                     <th className="p-3">Nome</th>
                     <th className="p-3">Posição</th>
+                    <th className="p-3">Status</th>
                     <th className="p-3">CPF</th>
                     <th className="p-3 text-center">Ações</th>
                   </tr>
@@ -159,6 +160,23 @@ export default function RegisterAthlete() {
                       <td className="p-3">
                         <span className="px-2 py-0.5 text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-700 rounded-full font-bold">
                           {athlete.position || 'N/I'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-0.5 text-xs border rounded-full font-bold ${
+                            athlete?.status?.default === 'PENDING'
+                              ? 'bg-yellow-800/60 text-yellow-300 border-yellow-800'
+                              : athlete?.status === 'ACTIVE'
+                              ? 'bg-emerald-800/60 text-emerald-300 border-emerald-800'
+                              : 'bg-gray-800/60 text-gray-400 border-gray-700'
+                          }`}
+                        >
+                          {athlete?.status?.default === 'PENDING'
+                            ? 'Pendente'
+                            : athlete?.status?.defualt === 'ACTIVE'
+                            ? 'Ativo'
+                            : athlete?.status?.deafault || 'N/I'}
                         </span>
                       </td>
                       <td className="p-3 text-xs text-slate-400">{athlete.cpf || '-'}</td>
