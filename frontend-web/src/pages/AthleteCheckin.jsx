@@ -128,12 +128,6 @@ export default function AthleteCheckin() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("@AtletaCheckin:token");
-    localStorage.removeItem("@AtletaCheckin:user");
-    navigate("/login");
-  };
-
   const formattedDate = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -160,14 +154,6 @@ export default function AthleteCheckin() {
                 {user.position || "Atleta"}
               </span>
             </div>
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs font-medium transition border border-gray-700"
-            >
-              <LogOut className="w-4 h-4" />
-              Sair
-            </button>
           </div>
         </div>
       </header>

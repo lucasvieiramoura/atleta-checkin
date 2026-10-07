@@ -28,7 +28,8 @@ const Layout = ({ children }) => {
 
 // Middleware de Proteção de Rota
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('@AtletaCheckin:token');
+  const token = localStorage.getItem('@AtletaCheckin:token');  
+
   return token ? children : <Navigate to="/login" />;
 };
 
