@@ -19,11 +19,16 @@ export default function Login() {
             //    setError('Acesso permitido apenas para Coaches.');
             //    return;
             //}
+            if (response.data.user.role === 'ATHLETE') {
+                navigate('/checkin');
+            } else if (response.data.user.role === 'COACH') {
+                navigate('/dashboard');
+            }
 
             localStorage.setItem('@AtletaCheckin:token', response.data.token);
             localStorage.setItem('@AtletaCheckin:user', JSON.stringify(response.data.user));
 
-            navigate('/dashboard');
+            //navigate('/dashboard');
         } catch (error) {
             setError(error.respose?.data?.message || 'Falha ao realizar login.');
         }

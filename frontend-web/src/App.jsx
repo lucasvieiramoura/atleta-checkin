@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import DashboardMetrics from './pages/DashboardMetrics';
 import FormBuilder from './pages/FormBuilder';
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import AthleteCheckin from './pages/AthleteCheckin';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/coach/forms" element={<PrivateRoute> <ProtectedRoute> <EditForms /> </ProtectedRoute></PrivateRoute>} />
           <Route path="/coach/metrics" element={<PrivateRoute> <ProtectedRoute> <DashboardMetrics /> </ProtectedRoute> </PrivateRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" />} />
+          <Route path="/checkin" element={<AthleteCheckin />} />
         </Routes>
       </Layout>
     </BrowserRouter>

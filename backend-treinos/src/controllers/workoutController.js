@@ -88,6 +88,65 @@ const getWorkoutById = async (req, res) => {
     }
 };
 
+const getTodayWorkout = async (req, res) => {
+  try {
+    const db = getDB();
+    
+    // Define início e fim do dia atual
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const workout = await db.collection('workouts').findOne({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    if (!workout) {
+      return res.status(200).json({ workout: null });
+    }
+
+    // Verificar se o atleta logado já fez check-in
+    const attendance = await db.collection('attendances').findOne({
+      workoutId: workout._id,
+      athleteId: new ObjectId(req.user.id)
+    });
+
+    return res.status(200).json({
+      workout,
+      hasCheckedIn: !!attendance
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const doCheckin = async (req, res) => {
+  try {
+    const db = getDB();
+    const { workoutId } = req.body;
+    const athleteId = req.user.id;
+
+    const newAttendance = {
+      workoutId: new ObjectId(workoutId),
+      athleteId: new ObjectId(athleteId),
+      status: 'CONFIRMED',
+      createdAt: new Date()
+    };
+
+    await db.collection('attendances').updateOne(
+      { workoutId: newAttendance.workoutId, athleteId: newAttendance.athleteId },
+      { $set: newAttendance },
+      { upsert: true }
+    );
+
+    return res.status(200).json({ message: 'Check-in realizado com sucesso!' });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // Deletar um treino ( Apenas COACH)
 const deleteWorkout = async (req, res) => {
     try {
@@ -115,5 +174,7 @@ module.exports =  {
     createWorkout,
     getWorkouts,
     getWorkoutById,
+    getTodayWorkout,
+    doCheckin,
     deleteWorkout
 };

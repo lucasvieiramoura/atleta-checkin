@@ -88,6 +88,13 @@ export default function RegisterAthlete() {
     }
   };
 
+  const sendCodeAuth = async () => {
+    try {
+          await sendActivationEmail(email, activationCode);
+        } catch (emailError) {
+          console.error('[ERRO EMAIL]: Não foi possível enviar o e-mail de ativação:', emailError);
+        }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: '', message: '' });
@@ -176,6 +183,8 @@ export default function RegisterAthlete() {
                             ? 'Pendente'
                             : athlete?.status?.defualt === 'ACTIVE'
                             ? 'Ativo'
+                            : athlete?.status?.defualt === 'INACTIVE'
+                            ? 'Inativo'
                             : athlete?.status?.deafault || 'N/I'}
                         </span>
                       </td>
@@ -319,6 +328,15 @@ export default function RegisterAthlete() {
               }`}
             >
               {editingId ? 'Atualizar Atleta' : 'Cadastrar Atleta'}
+            </button>
+            <button
+              onClick={sendCodeAuth}
+              //type="submit"
+              className={`w-full py-3 rounded-lg font-bold text-white text-sm transition mt-2 shadow-md ${
+                editingId ? 'bg-purple-500 hover:bg-purple-600' : 'bg-purple-500 hover:bg-purple-600'
+              }`}
+            >
+              {editingId ? 'Renviar Código' : 'Enviar Código'}
             </button>
           </form>
         </div>

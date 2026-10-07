@@ -37,7 +37,7 @@ const register = async (req, res) => {
         
         // Gerar código de 6 dígitos e expiração (DECLARAÇÃO AQUI)
         const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const activationCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+        const activationCodeExpires = new Date(Date.now() + 60 * 60 * 1000); // 15 minutos
 
         // Definir papel (default: ATLETA)
         const userRole = role && ['COACH','ATHLETE'].includes(role.toUpperCase())
@@ -143,7 +143,7 @@ const login = async (req, res) => {
 const verifyActivationCode = async (req, res) => {
   try {
     const { userId, code } = req.body;
-    const user = await User.findById(userId);
+    const user = await User.findOne(userId);
 
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
     if (user.status === 'ACTIVE') return res.status(400).json({ message: 'Conta já está ativa' });
