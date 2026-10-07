@@ -52,6 +52,10 @@ export default function RegisterAthlete() {
       email: athlete.email || '',
       phone: athlete.phone || '',
       cpf: athlete.cpf || '',
+      status: {
+        enum: '',
+        default:''
+      },
       position: athlete.position || 'WR',
       password: ''
     });
@@ -65,6 +69,10 @@ export default function RegisterAthlete() {
       email: '',
       phone: '',
       cpf: '',
+      status: {
+        enum: '',
+        default:''
+      },
       position: 'WR',
       password: '123@mudar'
     });
@@ -73,11 +81,18 @@ export default function RegisterAthlete() {
   // Confirmação via Modal para inativação
   const confirmInactivate = async () => {
     if (!deletingAthlete) return;
+    const inativo = {
+        status : {
+          default : "INACTIVE"
+        }
+      }
 
     try {
-      await api.put(`/athletes/${deletingAthlete._id}`, { status: 'INACTIVE' });
+      await api.put(`/athletes/${deletingAthlete._id}`, { status : inativo.status});
+     
+      setDeletingAthlete(deletingAthlete.inativo);
       setStatus({ type: 'success', message: 'Atleta desativado com sucesso!' });
-      setDeletingAthlete(null);
+      
       fetchAthletes();
     } catch (error) {
       setStatus({
@@ -174,16 +189,18 @@ export default function RegisterAthlete() {
                           className={`px-2 py-0.5 text-xs border rounded-full font-bold ${
                             athlete?.status?.default === 'PENDING'
                               ? 'bg-yellow-800/60 text-yellow-300 border-yellow-800'
-                              : athlete?.status === 'ACTIVE'
-                              ? 'bg-emerald-800/60 text-emerald-300 border-emerald-800'
+                              : athlete?.status?.default === 'ACTIVE'
+                              ? 'bg-emerald-800/60 text-emerald-300 border-emerald-800'                              
+                              : athlete?.status?.default === 'INACTIVE'
+                              ? 'bg-red-800/60 text-red-300 border-red-800'
                               : 'bg-gray-800/60 text-gray-400 border-gray-700'
                           }`}
                         >
                           {athlete?.status?.default === 'PENDING'
                             ? 'Pendente'
-                            : athlete?.status?.defualt === 'ACTIVE'
+                            : athlete?.status?.default === 'ACTIVE'
                             ? 'Ativo'
-                            : athlete?.status?.defualt === 'INACTIVE'
+                            : athlete?.status?.default === 'INACTIVE'
                             ? 'Inativo'
                             : athlete?.status?.deafault || 'N/I'}
                         </span>
