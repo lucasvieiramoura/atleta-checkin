@@ -5,7 +5,11 @@ export const ProtectedRoute = ({ children }) => {
     const user = JSON.parse(localStorage.getItem('@AtletaCheckin:user') || '{}');
 
     if (!token || user.role !== 'COACH') {
-        return <Navigate to="/" replace />
+        if ( user.role === 'ATHLETE') {
+            return <Navigate to="/checkin" replace />
+        } else {            
+            return <Navigate to="/login" replace />
+        }
     }
     return children;
 };

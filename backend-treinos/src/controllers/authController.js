@@ -145,8 +145,6 @@ const verifyActivationCode = async (req, res) => {
   try {
     const { userId, code } = req.body;
     const user  = await User.findById(userId);
-            //.findById({ _id: "6a99e008e1dc533595aa06c2"});
-    console.log(user);
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
     if (user.status.default === 'ACTIVE') return res.status(400).json({ message: 'Conta já está ativa' });
 
@@ -198,7 +196,7 @@ const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     const user = await User.findOne({ resetPasswordToken: token });
-
+    
     if (!user || new Date() > new Date(user.resetPasswordExpires)) {
       return res.status(400).json({ message: 'Link de recuperação inválido ou expirado (limite de 30 minutos)' });
     }

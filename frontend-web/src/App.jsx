@@ -42,8 +42,8 @@ export default function App() {
           <Route path="/activate" element={<ActivateAccount />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/forms" element={<PrivateRoute><FormBuilder /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><ProtectedRoute><Dashboard /></ProtectedRoute></PrivateRoute>} />
+          <Route path="/forms" element={<PrivateRoute><ProtectedRoute><FormBuilder /></ProtectedRoute></PrivateRoute>} />
           <Route path="/coach/register-athlete" element={<PrivateRoute> <ProtectedRoute> <RegisterAthlete /> </ProtectedRoute> </PrivateRoute>} />
           <Route path="/coach/workouts" element={<PrivateRoute>    <ProtectedRoute> <EditWorkouts /> </ProtectedRoute></PrivateRoute>} />
           <Route path="/coach/forms" element={<PrivateRoute> <ProtectedRoute> <EditForms /> </ProtectedRoute></PrivateRoute>} />

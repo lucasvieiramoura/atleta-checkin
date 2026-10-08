@@ -65,13 +65,13 @@ class UserModel {
     );
   };
 
-  static updateResetToken = async (id, token, expires) => {
+  static updateResetToken = async (id, resetToken, resetExpires) => {
   const db = getDB();
     return db.collection('users').updateOne(
       { _id: new ObjectId(id) },
-      { $set: { resetPasswordToken: token, resetPasswordExpires: expires } }
+      { $set: { resetPasswordToken: resetToken, resetPasswordExpires: resetExpires } }
     );
-  }
+  };
 }
 
 module.exports = UserModel;

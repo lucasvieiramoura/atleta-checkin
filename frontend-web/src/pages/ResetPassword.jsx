@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import api from '../api/axios';
+
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -28,13 +30,9 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, newPassword: password }),
-      });
-
-      const data = await response.json();
+      const response = await api.post('/auth/reset-password', { token, newPassword: password }); 
+    
+      const data = response;
 
       if (!response.ok) {
         throw new Error(data.message || 'Erro ao redefinir senha.');
