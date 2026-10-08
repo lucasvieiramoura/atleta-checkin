@@ -117,7 +117,7 @@ const getDashboardMetrics = async (req, res) => {
   try {
     const db = getDB();
 
-    const totalAthletes = await db.collection('users').countDocuments({ role: 'ATHLETE', active: { $ne: false } });
+    const totalAthletes = await db.collection('users').countDocuments({ role: 'ATHLETE', status: { default: {$ne: 'INACTVE' }} });
     const totalWorkouts = await db.collection('workouts').countDocuments();
     const totalPresences = await db.collection('attendances').countDocuments({ status: 'CONFIRMED' });
 
@@ -130,7 +130,7 @@ const getDashboardMetrics = async (req, res) => {
       {
         $lookup: {
           from: 'users',
-          localField: 'userId',
+          localField: 'athleteId',
           foreignField: '_id',
           as: 'athlete'
         }
