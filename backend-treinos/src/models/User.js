@@ -8,7 +8,11 @@ class UserModel {
   static async findOne(query) {
     return await this.getCollection().findOne(query);
   }
-
+  static async findById(id) {
+    if (!id || typeof id !== 'string' || !ObjectId.isValid(id)) return null;
+    // Usa findOne convertendo a string para ObjectId
+    return await this.getCollection().findOne({ _id: new ObjectId(id) });
+  }
   static async findByEmail(email) {
     if (!email || typeof email !== 'string') return null;
     return await this.getCollection().findOne({ email: email.toLowerCase() });
@@ -43,6 +47,22 @@ class UserModel {
 
     const result = await this.getCollection().insertOne(newUser);
     return { _id: result.insertedId, ...newUser };
+  };
+
+  static async active(id, userData) {
+     const db = getDB();
+    return db.collection('users').updateOne(
+      { _id: new ObjectId(id) },
+      { 
+        $set: { 
+          status: { 
+            type: String, enum: ['PENDING', 'ACTIVE', 'INACTIVE'], 
+            default: userData.status.default },          
+          activationCode: userData.activationCode, 
+          activationCodeExpires: userData.activationCodeExpires 
+        }
+      }
+    );
   };
 
   static updateResetToken = async (id, token, expires) => {

@@ -14,13 +14,16 @@ export default function Login() {
 
         try {
             const response = await api.post('/auth/login', { email, password });
-
-            //if (response.data.user.role !== 'COACH') {
-            //    setError('Acesso permitido apenas para Coaches.');
-            //    return;
-            //}
             if (response.data.user.role === 'ATHLETE') {
-                navigate('/checkin');
+                const status = response.data.user.status.default;
+                
+                if ( status === "PENDING") {
+                    navigate('/activate');
+                }else if (status === "ACTIVE") {
+                    navigate("/checkin");
+                }else {
+                    navigate("/login");
+                }
             } else if (response.data.user.role === 'COACH') {
                 navigate('/dashboard');
             }
@@ -28,7 +31,6 @@ export default function Login() {
             localStorage.setItem('@AtletaCheckin:token', response.data.token);
             localStorage.setItem('@AtletaCheckin:user', JSON.stringify(response.data.user));
 
-            //navigate('/dashboard');
         } catch (error) {
             setError(error.respose?.data?.message || 'Falha ao realizar login.');
         }

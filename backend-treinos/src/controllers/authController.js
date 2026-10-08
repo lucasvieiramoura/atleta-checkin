@@ -51,7 +51,7 @@ const register = async (req, res) => {
             cpf: cpf ? cpf : undefined,
             position: position || undefined,
             password: hashedPassword,
-            status: 'PENDING',
+            status: {default:'PENDING'},
             role: userRole,
             createAt: new Date()
         };
@@ -95,9 +95,9 @@ const login = async (req, res) => {
         }
 
         // Se a conta não estiver ativa, gera/reenvia o código e solicita confirmação
-        if (user.status === 'PENDING') {
+        if (user.status.default === 'PENDING') {
             const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+            const expires = new Date(Date.now() + 60 * 60 * 1000); // 15 min
 
             try {
               await sendActivationEmail(user.email, activationCode);
@@ -128,7 +128,8 @@ const login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                cpf: user.cpf,
+                cpf: user.cpf,                
+                status: user.status,
                 position: user.position,
                 role: user.role
               }
@@ -143,23 +144,27 @@ const login = async (req, res) => {
 const verifyActivationCode = async (req, res) => {
   try {
     const { userId, code } = req.body;
-    const user = await User.findOne(userId);
-
+    const user  = await User.findById(userId);
+            //.findById({ _id: "6a99e008e1dc533595aa06c2"});
+    console.log(user);
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
-    if (user.status === 'ACTIVE') return res.status(400).json({ message: 'Conta já está ativa' });
+    if (user.status.default === 'ACTIVE') return res.status(400).json({ message: 'Conta já está ativa' });
 
     if (user.activationCode !== code || new Date() > new Date(user.activationCodeExpires)) {
-      return res.status(400).json({ message: 'Código inválido ou expirado' });
+      return res.status(400).json({ message: `Código ${userId.name} inválido ou expirado` });
     }
-
-    // Ativa o usuário e limpa o código
-    await User.update(userId, {
-      status: 'ACTIVE',
-      activationCode: null,
-      activationCodeExpires: null
-    });
-
+   
+    if (user.activationCode === code ){
+        // Ativa o usuário e limpa o código
+        const userData = {
+          status: { default:'ACTIVE'},
+          activationCode: null,
+          activationCodeExpires: null
+        };
+        await User.active(userId, userData );
+      }
     return res.status(200).json({ message: 'Conta ativada com sucesso! Faça login.' });
+
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
