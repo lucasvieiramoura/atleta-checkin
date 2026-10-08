@@ -320,6 +320,7 @@ export default function RegisterAthlete() {
                   <option value="CB">CB</option>
                   <option value="OL">OL</option>
                   <option value="DL">DL</option>
+                  <option value="COACH">COACH</option>
                 </select>
               </div>
 

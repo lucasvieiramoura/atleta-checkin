@@ -29,14 +29,21 @@ class UserModel {
   }
 
   static async create(userData) {
+    let roleCoach ="";
+    if (userData.position ==='COACH') {
+      roleCoach ="COACH";
+    } else {
+      roleCoach ="ATHLETE";
+    }
+    
     const newUser = {
       name: userData.name,
       email: userData.email ? String(userData.email).toLowerCase() : '',
       phone: userData.phone ? String(userData.phone).trim() : '',
-      cpf: userData.cpf ? String(userData.cpf).trim() : null,
-      position: userData.position || null,
+      cpf: userData.cpf ? String(userData.cpf).trim() : null,      
       password: userData.password,
-      role: userData.role || 'ATHLETE',
+      position: userData.position || null,
+      role: roleCoach ,
       status: { type: String, enum: ['PENDING', 'ACTIVE', 'INACTIVE'], default: 'PENDING' },
       activationCode: { type: String, default: null },
       activationCodeExpires: { type: Date, default: null },
