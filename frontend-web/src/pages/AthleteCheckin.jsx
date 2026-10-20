@@ -33,9 +33,10 @@ export default function AthleteCheckin() {
     else {
       navigate("/");
       return;
-    }
+   
 
     fetchTodayWorkoutAndForm();
+     }
   }, []);
 
   const fetchTodayWorkoutAndForm = async () => {
