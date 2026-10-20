@@ -15,7 +15,6 @@ router.use(verifyToken);
 
 // Atletas e Coaches podem listar e visualizar treinos
 router.get('/', getWorkouts);
-router.get('/checkin', getTodayWorkout);
 router.get('/today', getTodayWorkout);
 router.get('/:id', getWorkoutById);
 
