@@ -49,7 +49,7 @@ export default function App() {
           <Route path="/coach/forms" element={<PrivateRoute> <ProtectedRoute> <EditForms /> </ProtectedRoute></PrivateRoute>} />
           <Route path="/coach/metrics" element={<PrivateRoute> <ProtectedRoute> <DashboardMetrics /> </ProtectedRoute> </PrivateRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" />} />
-          <Route path="/" element={<AthleteCheckin />} />
+          <Route path="/checkin" element={<AthleteCheckin />} />
         </Routes>
       </Layout>
     </BrowserRouter>
