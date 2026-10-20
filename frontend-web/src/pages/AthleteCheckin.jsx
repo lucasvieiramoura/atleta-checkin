@@ -30,6 +30,10 @@ export default function AthleteCheckin() {
       navigate("/dashboard");
       return;
     }
+    else {
+      navigate("/");
+      return;
+    }
 
     fetchTodayWorkoutAndForm();
   }, []);
